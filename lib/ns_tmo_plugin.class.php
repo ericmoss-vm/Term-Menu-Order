@@ -25,6 +25,22 @@ class NS_TMO_Plugin {
 		self::load_text_domain();
 		
 	}
+
+	public function admin_scripts ( $hook ) {
+
+		if ( 'edit-tags.php' !== $hook ) {
+			return;
+		}
+		
+		wp_enqueue_script(
+			'term-menu-order-admin-quick-edit',
+			plugins_url('js/admin-quick-edit.js', __DIR__),
+			array( 'jquery', 'inline-edit-tax' ),
+			'0.5.0',
+			true
+		);
+ 		
+	}
 	
 	public function add_column_header ($columns) {
 		
@@ -160,6 +176,8 @@ class NS_TMO_Plugin {
 		add_action('edit_term', array(&$this, 'add_edit_menu_order'));
 		
 		add_action('quick_edit_custom_box', array(&$this, 'quick_edit_menu_order'), 10, 3);
+
+		add_action('admin_enqueue_scripts', array(&$this, 'admin_scripts'), 10, 1);
 		
 	}
 	
