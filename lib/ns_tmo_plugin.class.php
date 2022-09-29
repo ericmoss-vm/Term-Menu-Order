@@ -12,21 +12,15 @@ class NS_TMO_Plugin {
 	
 	private static $taxonomies;
 	
-	private static $textdomain = 'mailchimp-widget';
+	private static $textdomain = 'term-menu-order';
 	
 	private function __construct () {
 		
 		self::$plugin_path = realpath(dirname(__FILE__) . '/../term-menu-order.php');
 		
-		wp_deregister_script('inline-edit-tax');
-		
-		wp_register_script('inline-edit-tax', plugins_url() . '/term-menu-order/js/custom_inline_edit_tax.js');
-		
 		register_activation_hook(self::$plugin_path, array(&$this, 'activate'));
 
-		register_deactivation_hook(self::$plugin_path, array(&$this, 'deactivate'));
-		
-		add_action('init', array(&$this, 'init'));
+		add_action( 'init', array(&$this, 'init'), 99 );
 		
 		self::load_text_domain();
 		
@@ -46,8 +40,14 @@ class NS_TMO_Plugin {
 		
 		$term = get_term($term_id, $taxonomy);
 		
-		return $term->$custom_column;
+		if( isset( $term->$custom_column ) )
+			return $term->$custom_column;
 		
+	}
+	
+	public function sortable_columns( $columns ) {
+		$columns['menu_order'] = 'menu_order';
+		return $columns;
 	}
 	
 	public function add_edit_menu_order ($term_id) {
@@ -90,10 +90,24 @@ class NS_TMO_Plugin {
 		
 	}
 	
+	public function edit_menu_orderby () {
+		//This is a one-off, so that we don't disrupt queries that may not use menu_order.
+		remove_filter('get_terms_orderby', array(&$this, 'edit_menu_orderby'));
+		return "menu_order";	
+	}
+
+	public function find_menu_orderby ($args) {
+		if ('menu_order' === $args['orderby']) {
+			add_filter('get_terms_orderby', array(&$this, 'edit_menu_orderby'));
+		}
+		return $args;
+	}
+	
+	
 	/**
 	 *
 	*/
-	public static function get_instance () {
+	public function get_instance () {
 		
 		if (empty(self::$instance)) {
 			
@@ -104,7 +118,7 @@ class NS_TMO_Plugin {
 		return self::$instance;
 		
 	}
-	
+
 	public function activate () {
 		
 		global $wpdb;
@@ -114,30 +128,25 @@ class NS_TMO_Plugin {
 		$wpdb->query($sql);
 		
 	}
-	
-	public function deactivate () {
 		
-		global $wpdb;
-		
-		$sql = "ALTER TABLE `{$wpdb->terms}` DROP COLUMN `menu_order`;";
-		
-		$wpdb->query($sql);
-		
-	}
-	
 	public function init () {
 		
-		self::$taxonomies = get_taxonomies();
+		self::$taxonomies = apply_filters( 'term_menu_order_taxonomies', get_taxonomies() );
 		
 		foreach (self::$taxonomies as $key => $value) {
 			
 			add_filter("manage_edit-{$value}_columns", array(&$this, 'add_column_header'));
 			add_filter("manage_{$value}_custom_column", array(&$this, 'add_column_value'), 10, 3);
-			
+
+			add_filter("manage_edit-{$value}_sortable_columns", array(&$this, 'sortable_columns' ) );
+						
 			add_action("{$value}_add_form_fields", array(&$this, 'menu_order_add_form_field'));
 			add_action("{$value}_edit_form_fields", array(&$this, 'menu_order_edit_form_field'));
 			
+			
 		}
+
+		add_filter('get_terms_args', array(&$this, 'find_menu_orderby'));
 		
 		add_filter("manage_edit-tags_columns", array(&$this, 'add_column_header'));
 		
@@ -156,3 +165,5 @@ class NS_TMO_Plugin {
 	}
 	
 }
+
+?>
