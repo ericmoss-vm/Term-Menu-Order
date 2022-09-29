@@ -86,10 +86,6 @@ class NS_TMO_Plugin {
 		
 		$menu_order_field = '<fieldset><div class="inline-edit-col"><label><span class="title">' . __( 'Order' , 'term-menu-order') . '</span><span class="input-text-wrap"><input class="ptitle" name="'. self::$form_field_name . '" type="text" value="" /></span></label></div></fieldset>';
 		
-		$menu_order_field .= '<script type="text/javascript">
-		
-		</script>';
-		
 		echo $menu_order_field;
 		
 	}
