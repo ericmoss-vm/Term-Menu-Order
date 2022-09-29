@@ -40,14 +40,18 @@ class NS_TMO_Plugin {
 		
 		$term = get_term($term_id, $taxonomy);
 		
-		if( isset( $term->$custom_column ) )
+		if ( isset( $term->$custom_column ) ) {
 			return $term->$custom_column;
+		}
 		
 	}
 	
 	public function sortable_columns( $columns ) {
+
 		$columns['menu_order'] = 'menu_order';
+
 		return $columns;
+
 	}
 	
 	public function add_edit_menu_order ($term_id) {
@@ -91,22 +95,28 @@ class NS_TMO_Plugin {
 	}
 	
 	public function edit_menu_orderby () {
-		//This is a one-off, so that we don't disrupt queries that may not use menu_order.
+
+		// This is a one-off, so that we don't disrupt queries that may not use menu_order.
 		remove_filter('get_terms_orderby', array(&$this, 'edit_menu_orderby'));
-		return "menu_order";	
+		
+		return "menu_order";
+
 	}
 
 	public function find_menu_orderby ($args) {
+
 		if ('menu_order' === $args['orderby']) {
 			add_filter('get_terms_orderby', array(&$this, 'edit_menu_orderby'));
 		}
+
 		return $args;
+
 	}
 	
 	
 	/**
-	 *
-	*/
+	 * Get plugin instance
+	 */
 	public static function get_instance () {
 		
 		if (empty(self::$instance)) {
@@ -142,7 +152,6 @@ class NS_TMO_Plugin {
 						
 			add_action("{$value}_add_form_fields", array(&$this, 'menu_order_add_form_field'));
 			add_action("{$value}_edit_form_fields", array(&$this, 'menu_order_edit_form_field'));
-			
 			
 		}
 
