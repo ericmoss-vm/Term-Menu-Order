@@ -4,7 +4,7 @@ Tags: developer, menu order, terms, taxonomy, taxonomies, wp_terms, menu_order
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JSL4JTA4KMZLG
 Requires at least: 3.0.1
 Tested up to: 6.0.2
-Stable tag: 0.5.0
+Stable tag: 0.5.1
 
 Creates a 'menu_order' column to specify term order, allowing theme and plugin developers to sort term by menu order.
 
@@ -30,6 +30,10 @@ fetch terms to use 'menu_order' as a sort order. Here's an example:
 3. 'menu_order' available when editing a term.
 
 == Changelog ==
+
+= 0.5.1 =
+* Fix 'order' field showing up in non-taxonomy quick-edit
+* Format to match WordPress Coding Standards
 
 = 0.5.0 =
 * Re-add quick-edit script to populate order value

@@ -33,7 +33,7 @@ class NS_TMO_Plugin {
 			'term-menu-order-admin-quick-edit',
 			plugins_url('js/admin-quick-edit.js', __DIR__),
 			array( 'jquery', 'inline-edit-tax' ),
-			'0.5.0',
+			'0.5.1',
 			true
 		);
 	}
