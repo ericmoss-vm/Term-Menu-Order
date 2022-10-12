@@ -29,32 +29,22 @@ License: GPL2
  * Set up the autoloader.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__) . '/lib/'));
+set_include_path( get_include_path() . PATH_SEPARATOR . realpath( dirname( __FILE__ ) . '/lib/' ) );
 
-spl_autoload_extensions('.class.php');
+spl_autoload_extensions( '.class.php' );
 
-if (! function_exists('buffered_autoloader')) {
-	
-	function buffered_autoloader ($c) {
-
+if ( ! function_exists( 'buffered_autoloader' ) ) {
+	function buffered_autoloader( $c ) {
 		try {
-		
-			spl_autoload($c);
-			
-		} catch (Exception $e) {
-			
+			spl_autoload( $c );
+		} catch ( Exception $e ) {
 			$message = $e->getMessage();
-			
 			return $message;
-			
 		}
-		
-
 	}
-	
 }
 
-spl_autoload_register('buffered_autoloader');
+spl_autoload_register( 'buffered_autoloader' );
 
 /**
  * Get the plugin object. All the bookkeeping and other setup stuff happens here.
