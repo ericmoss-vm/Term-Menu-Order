@@ -98,7 +98,10 @@ class NS_TMO_Plugin {
 		
 	}
 	
-	public function quick_edit_menu_order () {
+	public function quick_edit_menu_order( $column_name, $post_type, $taxonomy ) {
+		if ( empty( $taxonomy ) ) {
+			return;
+		}
 		
 		$menu_order_field = '<fieldset><div class="inline-edit-col"><label><span class="title">' . __( 'Order' , 'term-menu-order') . '</span><span class="input-text-wrap"><input class="ptitle" name="'. self::$form_field_name . '" type="text" value="" /></span></label></div></fieldset>';
 		
