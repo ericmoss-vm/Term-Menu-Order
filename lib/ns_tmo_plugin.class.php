@@ -44,13 +44,12 @@ class NS_TMO_Plugin {
 		return $columns;
 	}
 	
-	public function add_column_value( $empty = '', $custom_column, $term_id ) {
+	public function add_column_value( $value, $column_name, $term_id ) {
 		$taxonomy = isset( $_POST['taxonomy'] ) ? $_POST['taxonomy'] : $_GET['taxonomy'];
-		
 		$term = get_term($term_id, $taxonomy);
 		
-		if ( isset( $term->$custom_column ) ) {
-			return $term->$custom_column;
+		if ( isset( $term->$column_name ) ) {
+			return $term->$column_name;
 		}
 	}
 	
